@@ -68,7 +68,7 @@
     <div class="flex flex-col md:flex-row min-h-screen relative">
 
         <!-- MOBILE HEADER BAR (Hidden on desktop) -->
-        <header class="md:hidden sticky top-0 z-40 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 p-4 flex items-center justify-between transition-colors shadow-xs">
+        <header class="md:hidden sticky top-0 z-40 bg-white/95 dark:bg-slate-955/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 p-4 flex items-center justify-between transition-colors shadow-xs">
             <div class="flex items-center space-x-3">
                 <button onclick="toggleMobileSidebar()" class="p-2 -ml-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 focus:outline-none">
                     <i class="fa-solid fa-bars text-lg"></i>
@@ -152,7 +152,7 @@
             </div>
 
             <!-- Sidebar Bottom Panel info -->
-            <div class="space-y-4 pt-4 border-t border-slate-150 dark:border-slate-850">
+            <div class="space-y-4 pt-4 border-t border-slate-150 dark:border-slate-855">
                 <!-- Sync indicator block -->
                 <div id="syncStatus" class="flex items-center space-x-2.5 text-xs bg-slate-50 dark:bg-slate-900 p-2.5 rounded-xl border border-slate-150 dark:border-slate-850">
                     <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
@@ -179,7 +179,7 @@
             <!-- ==================== TAB: DASHBOARD ==================== -->
             <div id="tab-dashboard" class="tab-content block space-y-6">
 
-                <!-- MAIN ALL-IN-ONE METRIC CARDS (ALL REQUIRED ELEMENTS IN ONE PLACE) -->
+                <!-- MAIN ALL-IN-ONE METRIC CARDS -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Net Total Savings Metric -->
                     <div class="bg-gradient-to-br from-primary-600 to-emerald-600 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden transition-all hover:shadow-xl">
@@ -287,10 +287,16 @@
                         </div>
                     </div>
 
-                    <!-- RECENT HISTORY TABLE (Maintained in Dashboard) -->
+                    <!-- RECENT HISTORY TABLE & LOCAL RELOAD BUTTON -->
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xs border border-slate-100 dark:border-slate-850 lg:col-span-2">
                         <div class="flex items-center justify-between mb-4">
-                            <h4 class="font-bold text-slate-700 dark:text-slate-200">ประวัติการออมเงินล่าสุด</h4>
+                            <h4 class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                                <span>ประวัติการออมเงินล่าสุด</span>
+                                <!-- ปุ่มรีโหลดข้อมูลประวัติบันทึกการออมเฉพาะหน้าหลัก -->
+                                <button onclick="reloadSavedTransactions()" title="รีเฟรชสถิติรายการฝาก" class="p-1.5 text-xs rounded-lg text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                    <i class="fa-solid fa-arrows-rotate animate-all duration-300"></i>
+                                </button>
+                            </h4>
                             <button onclick="switchTab('transactions')" class="text-xs text-primary-500 font-bold hover:underline">ดูประวัติทั้งหมด</button>
                         </div>
                         <div class="overflow-x-auto">
@@ -328,7 +334,7 @@
                 </div>
 
                 <!-- Transactions table block -->
-                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850 overflow-hidden">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855 overflow-hidden">
                     <div class="p-6 border-b border-slate-100 dark:border-slate-850 flex flex-col sm:flex-row justify-between items-center gap-4">
                         <div class="flex items-center space-x-2 w-full sm:w-auto">
                             <span class="text-xs font-bold text-slate-400 uppercase">กรองผล:</span>
@@ -397,10 +403,10 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Left side charts block (Contains both Line chart and comparison bar chart now) -->
+                    <!-- Left side charts block -->
                     <div class="lg:col-span-2 space-y-6">
                         
-                        <!-- LINE CHART: Main Savings Timeline Accumulation (Moved here) -->
+                        <!-- LINE CHART: Main Savings Timeline Accumulation -->
                         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850">
                             <div class="flex items-center justify-between mb-4">
                                 <h4 class="font-bold text-slate-700 dark:text-slate-200">แผนภูมิติดตามยอดออมเงินสะสมรวม</h4>
@@ -411,7 +417,7 @@
                             </div>
                         </div>
 
-                        <!-- BAR CHART: Monthly Compare (Stays here) -->
+                        <!-- BAR CHART: Monthly Compare -->
                         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855">
                             <div class="flex items-center justify-between mb-4">
                                 <h4 class="font-bold text-slate-700 dark:text-slate-200">แผนภูมิเปรียบเทียบความเพียรฝากออมรายเดือน</h4>
@@ -448,7 +454,7 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Interactive Challenges -->
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850 space-y-6">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855 space-y-6">
                         <div class="flex items-center justify-between border-b pb-4 border-slate-100 dark:border-slate-700">
                             <div>
                                 <h4 id="monthlyChallengeTitle" class="font-extrabold text-slate-700 dark:text-slate-200">ภารกิจท้าทายประจำสัปดาห์</h4>
@@ -509,7 +515,7 @@
             <div id="tab-settings" class="tab-content hidden space-y-6">
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850">
                     <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200">ระบบและศูนย์การตั้งค่า (System Center)</h3>
-                    <p class="text-xs text-slate-400">บริหารจัดการระดับกองทุนสำรองฉุกเฉิน และตั้งค่าพื้นที่เก็บข้อมูลหลักในเครื่องของคุณ</p>
+                    <p class="text-xs text-slate-400">บริหารจัดการระดับกองทุนสำรองฉุกเฉิน ดึงค่าซิงค์กู้คืนระบบ และจัดการความจำหลัก</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -540,25 +546,21 @@
                         </div>
                     </div>
 
-                    <!-- Secure Storage Info & Wipe Option -->
+                    <!-- Secure Storage Info & Quick Cloud Reload -->
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850 space-y-4 flex flex-col justify-between">
                         <div class="space-y-4">
                             <h4 class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-2">
                                 <i class="fa-solid fa-lock text-indigo-500"></i>
-                                <span>ความปลอดภัยของแผ่นข้อมูลสำรอง</span>
+                                <span>ความปลอดภัยและการรีโหลดซิงค์ข้อมูล</span>
                             </h4>
                             <p class="text-xs text-slate-400 leading-relaxed">
-                                🔒 **FinSave Encrypted Channel**: เพื่อป้องกันความเสี่ยงในการถูกแฮก คัดลอกโทเค็นสิทธิ์ หรือลักลอบดูแผ่นงานสถิติส่วนบุคคลของคุณผ่านการแอบส่องหน้าจอนี้ รายละเอียดตำแหน่งปลายทางเซิร์ฟเวอร์สำรองข้อมูล Google Drive ได้ถูกเข้ารหัสและซ่อนการแสดงผลไว้ในแกนระบบปฏิบัติการอย่างปลอดภัยสูงสุด
+                                🔒 **FinSave Encrypted Channel**: โทเค็นและ URL ปลายทางของ Google Sheet ของคุณได้รับการเข้ารหัสและซ่อนออกจากหน้าจอนี้เพื่อความปลอดภัยในการโดนคักลอก อย่างไรก็ตามคุณสามารถกดดึงข้อมูลทั้งหมดจากชีตเพื่อกู้คืนข้อมูลแบบทันทีได้ที่ปุ่มด้านล่างนี้
                             </p>
-                            <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-indigo-50 dark:border-indigo-950/40 text-xs space-y-2">
-                                <div class="flex items-center justify-between font-bold text-indigo-600 dark:text-indigo-400">
-                                    <span>สถานะช่องทางส่งข้อมูล:</span>
-                                    <span class="text-emerald-500 flex items-center gap-1 font-bold">
-                                        <i class="fa-solid fa-shield"></i> เข้ารหัสถาวรแล้ว
-                                    </span>
-                                </div>
-                                <p class="text-[11px] text-slate-400 dark:text-slate-500">ประวัติการฝากเงินออมจะถูกกระจายสำรองส่งลงสู่ Google Sheet แผ่นงานหลักของคุณควบคู่กับการจดจำในอุปกรณ์นี้ทันที</p>
-                            </div>
+                            
+                            <!-- ปุ่มรีโหลดข้อมูลแบบด่วนทั้งหมด (กู้คืนจากคลาวด์ลงอุปกรณ์นี้ทั้งหมด) -->
+                            <button onclick="quickReloadAllData()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/10">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> รีโหลดข้อมูลแบบด่วนทั้งหมดจาก Google Sheets
+                            </button>
                         </div>
 
                         <div class="pt-4 border-t border-slate-150 dark:border-slate-750">
@@ -1865,7 +1867,7 @@
             }
         }
 
-        // ==================== TAB: SYSTEM CONFIGS ====================
+        // ==================== TAB: SYSTEM CONFIGS & QUICK RELOADS ====================
         function saveEmergencyFundSettings() {
             const expense = parseFloat(document.getElementById('emergencyExpenseInput')?.value || "15000");
             const months = parseInt(document.getElementById('emergencyMonthsSelect')?.value || "3");
@@ -1878,6 +1880,62 @@
             state.emergencyFund = { expense, months };
             showToast("อัปเดตเกราะป้องกันความปลอดภัยกองทุนฉุกเฉินเรียบร้อย!");
             saveState();
+        }
+
+        // รีโหลดสถิติประวัติการออมเฉพาะหน้าหลัก (Refresh Local State to visual elements)
+        function reloadSavedTransactions() {
+            showToast("🔄 กำลังอัปเดตและรีโหลดประวัติสถิติหลัก...", "success");
+            // หมุนภาพไอคอนเพื่อความสมจริง
+            const rotateIcon = document.querySelector('.fa-arrows-rotate');
+            if (rotateIcon) {
+                rotateIcon.classList.add('fa-spin');
+                setTimeout(() => rotateIcon.classList.remove('fa-spin'), 1000);
+            }
+            renderAll();
+        }
+
+        // รีโหลดข้อมูลแบบด่วนทั้งหมด (กู้คืนประวัติทั้งหมดจาก Google Sheets บนคลาวด์)
+        async function quickReloadAllData() {
+            if (!WEB_APP_URL || WEB_APP_URL.includes("your-app-script-id")) {
+                showToast("ไม่พบการระบุตำแหน่ง Script สิทธิ์อ้างอิง", "error");
+                return;
+            }
+
+            const ok = await showConfirmModal(
+                "🔄 ยืนยันดึงประวัติกู้คืนระบบทั้งหมด?", 
+                "ระบบจะทำลายข้อมูลที่จัดเก็บอยู่ในเครื่องเครื่องนี้ทิ้ง และไปดึงฐานประวัติการฝากออม & เป้าหมายทั้งหมดบน Google Sheets คลาวด์ลงมาเซฟทับแทน"
+            );
+
+            if (!ok) return;
+
+            showToast("📥 กำลังเรียกขอข้อมูลและรีโหลดระบบด่วน...", "reminder");
+
+            try {
+                // สร้างคำร้องขอ GET เพื่อหลีกเลี่ยงข้อจำกัด CORS ในการดึงค่ากลับ (doGet supports CORS redirects)
+                const fetchUrl = `${WEB_APP_URL}?action=read&spreadsheetId=${SPREADSHEET_ID}`;
+                const response = await fetch(fetchUrl);
+                const result = await response.json();
+
+                if (result && result.status === "success" && result.data) {
+                    // แทนที่ state ของผู้ใช้ทั้งหมดด้วยข้อมูลบนชีต
+                    state.transactions = result.data.transactions || [];
+                    state.goals = result.data.goals || [];
+                    state.emergencyFund = result.data.emergencyFund || { expense: 15000, months: 3 };
+                    state.challenges = result.data.challenges || { monthlyCount: 0, days365: 0 };
+                    state.streak = result.data.streak || 0;
+
+                    // เซฟกลับไปยัง LocalStorage
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(state));
+                    renderAll();
+
+                    showToast("🎉 ระบบกู้คืนและรีโหลดสถิติด่วนทั้งหมดเสร็จสมบูรณ์แล้ว!", "success");
+                } else {
+                    showToast("ไม่สามารถแปลงข้อมูลที่ได้จากชีตได้ โครงสร้างอาจผิดเพี้ยน", "error");
+                }
+            } catch(e) {
+                console.error("Cloud Quick Reload Error:", e);
+                showToast("ล้มเหลว! ตรวจสอบการเปิดสิทธิ์การเข้าถึง Web App หรือการเชื่อมต่ออินเทอร์เน็ต", "error");
+            }
         }
 
         async function triggerWipeAllDataConfirm() {
