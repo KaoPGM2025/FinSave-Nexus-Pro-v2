@@ -64,8 +64,26 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
 
+    <!-- LOCKOUT SYSTEM OVERLAY (Active during 23:00 - 00:00) -->
+    <div id="maintenanceLockoutOverlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 text-white p-6 hidden">
+        <div class="max-w-md text-center space-y-6">
+            <div class="w-24 h-24 bg-gradient-to-tr from-rose-500 to-amber-500 rounded-3xl flex items-center justify-center text-white mx-auto shadow-2xl animate-bounce">
+                <i class="fa-solid fa-clock text-5xl"></i>
+            </div>
+            <div class="space-y-2">
+                <h1 class="text-3xl font-black bg-gradient-to-r from-rose-400 to-amber-400 bg-clip-text text-transparent">ระบบอยู่ในช่วงบำรุงรักษา</h1>
+                <p class="text-slate-400 text-sm">เพื่อรักษาระบบให้เสถียรและทำงานได้อย่างมีคุณภาพสูงสุด ระบบจะปิดปรับปรุงชั่วคราวเวลา 23:00 น. ถึง 00:00 น. ของทุกวัน</p>
+            </div>
+            <div class="p-6 bg-slate-900 border border-slate-800 rounded-2xl">
+                <p class="text-xs text-slate-500 uppercase tracking-widest">ระบบจะเปิดใช้งานปกติในอีก</p>
+                <div id="lockoutCountdown" class="text-3xl font-black text-amber-400 mt-2 font-mono">00:00:00</div>
+            </div>
+            <p class="text-xxs text-slate-600">ขอบพระคุณสำหรับความร่วมมือเพื่อรักษาความมั่นคงของข้อมูลการเงิน</p>
+        </div>
+    </div>
+
     <!-- APP WRAPPER: Smart Adaptive Layout (Toggleable & Responsive Sidebar) -->
-    <div class="flex flex-col md:flex-row min-h-screen relative">
+    <div id="mainAppContent" class="flex flex-col md:flex-row min-h-screen relative">
 
         <!-- MOBILE HEADER BAR (Hidden on desktop) -->
         <header class="md:hidden sticky top-0 z-40 bg-white/95 dark:bg-slate-955/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 p-4 flex items-center justify-between transition-colors shadow-xs">
@@ -91,10 +109,10 @@
         </header>
 
         <!-- BACKDROP COVER FOR MOBILE SIDEBAR DRAWER -->
-        <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 z-45 bg-black/40 backdrop-blur-xs hidden md:hidden"></div>
+        <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 z-35 bg-black/40 backdrop-blur-xs hidden md:hidden"></div>
 
         <!-- SMART ADAPTIVE SIDEBAR (Desktop expandable & Mobile slidable drawer) -->
-        <aside id="appSidebar" class="fixed md:sticky top-0 left-0 h-screen z-50 flex flex-col justify-between bg-white dark:bg-slate-955 border-r border-slate-200 dark:border-slate-800 p-6 transition-all duration-300 -translate-x-full md:translate-x-0 w-64">
+        <aside id="appSidebar" class="fixed md:sticky top-0 left-0 h-screen z-40 flex flex-col justify-between bg-white dark:bg-slate-955 border-r border-slate-200 dark:border-slate-800 p-6 transition-all duration-300 -translate-x-full md:translate-x-0 w-64">
             
             <div class="space-y-8">
                 <!-- Sidebar Top Brand Block -->
@@ -109,7 +127,7 @@
                         </div>
                     </div>
 
-                    <!-- Desktop collapse mini-icon logo (shows when collapsed) -->
+                    <!-- Desktop collapse mini-icon logo -->
                     <div class="brand-collapsed hidden mx-auto">
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-primary-500/20">
                             <i class="fa-solid fa-piggy-bank text-lg"></i>
@@ -130,7 +148,7 @@
                     </button>
                     <button onclick="switchTab('transactions')" id="sidebarBtn-transactions" class="sidebar-btn w-full px-4 py-3 text-sm font-semibold rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all flex items-center space-x-3">
                         <div class="w-6 text-center"><i class="fa-solid fa-receipt text-lg"></i></div>
-                        <span class="sidebar-label transition-all duration-150">บันทึกการออม</span>
+                        <span class="sidebar-label transition-all duration-150">ประวัติการออม</span>
                     </button>
                     <button onclick="switchTab('goals')" id="sidebarBtn-goals" class="sidebar-btn w-full px-4 py-3 text-sm font-semibold rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all flex items-center space-x-3">
                         <div class="w-6 text-center"><i class="fa-solid fa-bullseye text-lg"></i></div>
@@ -142,7 +160,7 @@
                     </button>
                     <button onclick="switchTab('challenges')" id="sidebarBtn-challenges" class="sidebar-btn w-full px-4 py-3 text-sm font-semibold rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all flex items-center space-x-3">
                         <div class="w-6 text-center"><i class="fa-solid fa-trophy text-lg"></i></div>
-                        <span class="sidebar-label transition-all duration-150">ภารกิจ & ชาเลนจ์</span>
+                        <span class="sidebar-label transition-all duration-150">ระดับนักออม</span>
                     </button>
                     <button onclick="switchTab('settings')" id="sidebarBtn-settings" class="sidebar-btn w-full px-4 py-3 text-sm font-semibold rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all flex items-center space-x-3">
                         <div class="w-6 text-center"><i class="fa-solid fa-sliders text-lg"></i></div>
@@ -164,7 +182,7 @@
 
                 <!-- Toggle Theme and Version inside sidebar -->
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] text-slate-400 font-semibold tracking-wider sidebar-label">v2.3 (2026)</span>
+                    <span class="text-[10px] text-slate-400 font-semibold tracking-wider sidebar-label">v2.5.4 (2026)</span>
                     <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:scale-105 transition-transform border border-slate-150 dark:border-slate-850">
                         <i class="fa-solid fa-moon dark:hidden"></i>
                         <i class="fa-solid fa-sun hidden dark:inline"></i>
@@ -174,7 +192,7 @@
         </aside>
 
         <!-- MAIN PAGE CONTAINER -->
-        <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto pb-12">
 
             <!-- ==================== TAB: DASHBOARD ==================== -->
             <div id="tab-dashboard" class="tab-content block space-y-6">
@@ -233,7 +251,7 @@
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-xs border border-slate-100 dark:border-slate-855 flex flex-col justify-between transition-all hover:shadow-md">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">กองทุนสำรองฉุกเฉิน</span>
-                            <div class="w-7 h-7 rounded-full bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center text-indigo-500">
+                            <div class="w-7 h-7 rounded-full bg-indigo-50 dark:bg-indigo-955/30 flex items-center justify-center text-indigo-500">
                                 <i class="fa-solid fa-shield-halved text-sm"></i>
                             </div>
                         </div>
@@ -270,92 +288,98 @@
                     </div>
                 </div>
 
-                <!-- Interactive widgets & Recent History -->
+                <!-- Premium Welcome & Quick overview grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Quick action save box -->
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xs border border-slate-100 dark:border-slate-850">
-                        <h4 class="font-bold text-slate-700 dark:text-slate-200 mb-4">ธุรกรรมความเพียร</h4>
-                        <div class="space-y-4">
-                            <button onclick="openTransactionModal()" class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-bold flex flex-col items-center justify-center transition-all hover:scale-[1.01] shadow-lg shadow-emerald-500/10">
-                                <i class="fa-solid fa-circle-plus text-2xl mb-1"></i>
-                                <span class="text-sm">หยอดกระปุกฝากเงินออม</span>
+                    <div class="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+                        <div class="space-y-2">
+                            <h3 class="text-xl font-bold">ยินดีต้อนรับสู่ระบบสะสมทรัพย์</h3>
+                            <p class="text-xs text-indigo-200">ปลอดภัย มั่นคง และเป็นระเบียบในการบริหารเป้าหมายการเงินของคุณ</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="switchTab('transactions')" class="px-4 py-2.5 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow">
+                                <i class="fa-solid fa-list-check"></i> ดูประวัติการออมทรัพย์
                             </button>
-                            <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-                                <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">คำสร้างแรงบันดาลใจวันนี้</h5>
-                                <p id="motivationalQuote" class="text-xs text-slate-500 dark:text-slate-400 italic">"ความสำเร็จของการออมเงิน เริ่มจากการเริ่มหยอดกระปุกในทุกวันอย่างมีวินัย"</p>
-                            </div>
+                            <button onclick="switchTab('goals')" class="px-4 py-2.5 bg-slate-855 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs">
+                                ปรับแต่งแผนเป้าหมาย
+                            </button>
                         </div>
                     </div>
 
-                    <!-- RECENT HISTORY TABLE (Reload button removed) -->
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xs border border-slate-100 dark:border-slate-850 lg:col-span-2">
+                    <!-- mini goals list -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850 lg:col-span-2">
                         <div class="flex items-center justify-between mb-4">
-                            <h4 class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                                <span>ประวัติการออมเงินล่าสุด</span>
-                            </h4>
-                            <button onclick="switchTab('transactions')" class="text-xs text-primary-500 font-bold hover:underline">ดูประวัติทั้งหมด</button>
+                            <h4 class="font-bold text-slate-700 dark:text-slate-200">ความก้าวหน้าเป้าหมาย</h4>
+                            <button onclick="switchTab('goals')" class="text-xs text-primary-500 font-bold hover:underline">ดูทั้งหมด</button>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs">
-                                <thead>
-                                    <tr class="text-slate-400 uppercase border-b border-slate-150 dark:border-slate-855 font-bold">
-                                        <th class="pb-3">วันและเวลาที่บันทึก (อัตโนมัติ)</th>
-                                        <th class="pb-3">ประเภท</th>
-                                        <th class="pb-3">จำนวนเงินฝาก</th>
-                                        <th class="pb-3">เป้าหมายที่ออมร่วม</th>
-                                        <th class="pb-3">หมายเหตุประกอบ</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dashTxTableBody" class="divide-y divide-slate-100 dark:divide-slate-855 text-slate-600 dark:text-slate-300">
-                                    <tr>
-                                        <td colspan="5" class="py-4 text-center text-slate-400 text-xs">ยังไม่มีประวัติการออม</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div id="dashGoalMiniList" class="space-y-4 max-h-[140px] overflow-y-auto pr-1">
+                            <div class="text-center py-6 text-slate-400 text-xs">ยังไม่มีเป้าหมายที่จะแสดง</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ==================== TAB: TRANSACTIONS ==================== -->
+            <!-- ==================== TAB: TRANSACTIONS (SAVINGS HISTORY) ==================== -->
             <div id="tab-transactions" class="tab-content hidden space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850">
                     <div>
-                        <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200">รายการเดินบัญชีออมทรัพย์</h3>
-                        <p class="text-xs text-slate-400">ตารางประวัติบันทึกการออมทั้งหมดในระบบเครื่องของคุณ</p>
+                        <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200">ประวัติการออม</h3>
+                        <p class="text-xs text-slate-400">ศูนย์รวมประวัติการออมเงินสะสมทั้งหมด ระบบระบุเวลาปัจจุบันอัตโนมัติ</p>
                     </div>
                     <button onclick="openTransactionModal()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-sm flex items-center space-x-2 shadow-lg shadow-emerald-500/20">
-                        <i class="fa-solid fa-plus"></i> <span>บันทึกเงินออมใหม่</span>
+                        <i class="fa-solid fa-plus"></i> <span>บันทึกฝากออมเพิ่ม</span>
                     </button>
                 </div>
 
                 <!-- Transactions table block -->
                 <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855 overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 dark:border-slate-850 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-855 flex flex-col sm:flex-row justify-between items-center gap-4">
                         <div class="flex items-center space-x-2 w-full sm:w-auto">
-                            <span class="text-xs font-bold text-slate-400 uppercase">กรองผล:</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase">ประเภทรายการ:</span>
                             <div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl">
-                                <button class="px-4 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 shadow-xs text-slate-800 dark:text-white">การออมฝากเงิน</button>
+                                <button class="px-4 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 shadow-xs text-slate-800 dark:text-white">การออมฝากเงินสะสม</button>
                             </div>
                         </div>
                         <div class="relative w-full sm:w-64">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
                             </span>
-                            <input type="text" id="txSearchInput" oninput="searchTx()" placeholder="ค้นหาจากหมายเหตุการฝาก..." class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <input type="text" id="txSearchInput" oninput="searchTx()" placeholder="ค้นหาจากข้อความบันทึก..." class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        </div>
+                    </div>
+
+                    <!-- Highlight Recent Savings Mini Table inside Savings History -->
+                    <div class="p-6 bg-slate-50/50 dark:bg-slate-900/30 border-b border-slate-150 dark:border-slate-800">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">ประวัติการออมล่าสุด (ล่าสุด 5 รายการ)</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="text-slate-400 uppercase border-b border-slate-150 dark:border-slate-800 font-bold">
+                                        <th class="pb-2">วันและเวลาที่บันทึก (อัตโนมัติ)</th>
+                                        <th class="pb-2">ประเภท</th>
+                                        <th class="pb-2">จำนวนเงินฝาก</th>
+                                        <th class="pb-2">เป้าหมายที่ออมร่วม</th>
+                                        <th class="pb-2">หมายเหตุประกอบ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashTxTableBody" class="divide-y divide-slate-100 dark:divide-slate-855 text-slate-600 dark:text-slate-300">
+                                    <tr>
+                                        <td colspan="5" class="py-3 text-center text-slate-400 text-xs">ยังไม่มีประวัติการออม</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead>
-                                <tr class="bg-slate-50 dark:bg-slate-900/50 text-xs text-slate-400 uppercase border-b border-slate-100 dark:border-slate-800 font-bold">
+                                <tr class="bg-slate-50 dark:bg-slate-900/20 text-xs text-slate-400 uppercase border-b border-slate-150 dark:border-slate-800 font-bold">
                                     <th class="p-4">วันและเวลาฝาก (อัตโนมัติ)</th>
                                     <th class="p-4">ประเภทรายการ</th>
                                     <th class="p-4">ยอดจำนวนเงิน</th>
                                     <th class="p-4">เป้าหมายที่สอดคล้อง</th>
                                     <th class="p-4">หมายเหตุของรายการ</th>
-                                    <th class="p-4 text-center">ตัวเลือก</th>
+                                    <th class="p-4 text-center">จัดการการบันทึก</th>
                                 </tr>
                             </thead>
                             <tbody id="txFullTableBody" class="divide-y divide-slate-100 dark:divide-slate-855 text-slate-600 dark:text-slate-300">
@@ -386,7 +410,7 @@
 
             <!-- ==================== TAB: ANALYSIS ==================== -->
             <div id="tab-analysis" class="tab-content hidden space-y-6">
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-indigo-500 text-white flex items-center justify-center shadow-md">
                             <i class="fa-solid fa-chart-line text-lg"></i>
@@ -402,7 +426,7 @@
                     <!-- Left side charts block -->
                     <div class="lg:col-span-2 space-y-6">
                         
-                        <!-- LINE CHART: Main Savings Timeline Accumulation -->
+                        <!-- LINE CHART: Main Savings Timeline Accumulation (Cumulative Savings) -->
                         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850">
                             <div class="flex items-center justify-between mb-4">
                                 <h4 class="font-bold text-slate-700 dark:text-slate-200">แผนภูมิติดตามยอดออมเงินสะสมรวม</h4>
@@ -413,7 +437,7 @@
                             </div>
                         </div>
 
-                        <!-- BAR CHART: Monthly Compare -->
+                        <!-- BAR CHART: Monthly Compare (Animated instantly on save) -->
                         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855">
                             <div class="flex items-center justify-between mb-4">
                                 <h4 class="font-bold text-slate-700 dark:text-slate-200">แผนภูมิเปรียบเทียบความเพียรฝากออมรายเดือน</h4>
@@ -426,35 +450,47 @@
 
                     </div>
 
-                    <!-- Right side AI predictions -->
+                    <!-- Right side AI predictions (Reconfigured as AI Global Forecasting Engine) -->
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850 space-y-4 h-fit">
                         <h4 class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-2">
-                            <i class="fa-solid fa-brain text-emerald-500"></i>
-                            <span>ระบบปัญญาประดิษฐ์พยากรณ์คาดเดาเป้าหมาย (AI)</span>
+                            <i class="fa-solid fa-brain text-emerald-500 animate-pulse"></i>
+                            <span>ระบบปัญญาประดิษฐ์พยากรณ์รวมทั้งหมด (AI)</span>
                         </h4>
-                        <p class="text-xs text-slate-400">ระบบประเมินความเร็วของการออมเพื่อพยากรณ์วันที่จะบรรลุความฝันแต่ละรายการแบบอัจฉริยะ</p>
+                        <p class="text-xs text-slate-400">ประมวลผลอัตราออมรายเดือน, ศักยภาพกองทุน และแนวโน้มความมั่นคงในภาพรวมของบัญชีทั้งหมดของคุณ</p>
 
-                        <div id="aiAnalysisResults" class="space-y-4 max-h-[500px] overflow-y-auto pr-1 no-scrollbar">
-                            <div class="text-center py-12 text-slate-400 text-xs">ยังไม่มีเป้าหมายที่จะนำมาพยากรณ์ได้</div>
+                        <!-- AI Global Summary Display Block -->
+                        <div id="aiGlobalSummaryCard" class="p-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 rounded-2xl space-y-3">
+                            <div class="flex items-center gap-1.5 font-bold text-xs text-indigo-700 dark:text-indigo-400">
+                                <i class="fa-solid fa-calculator"></i>
+                                <span>บทสรุปแนวโน้มการเงินอัจฉริยะ</span>
+                            </div>
+                            <div id="aiGlobalTextContent" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
+                                <!-- JS Auto computed dynamic summary values -->
+                                <div>กำลังคำนวณสถิติภาพรวม...</div>
+                            </div>
+                        </div>
+
+                        <div id="aiAnalysisResults" class="space-y-4 max-h-[300px] overflow-y-auto pr-1 no-scrollbar">
+                            <div class="text-center py-6 text-slate-400 text-xs">ยังไม่มีเป้าหมายที่จะนำมาพยากรณ์ได้</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ==================== TAB: CHALLENGES ==================== -->
+            <!-- ==================== TAB: CHALLENGES (RENAME TO SAVER LEVEL & EXCLUDED DEPOSIT) ==================== -->
             <div id="tab-challenges" class="tab-content hidden space-y-6">
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850">
-                    <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200">ความท้าทายเพื่อสร้างวินัยการสะสม (Monthly Saving Challenge)</h3>
-                    <p class="text-xs text-slate-400">เป้าหมายท้าทายย่อยที่ปรับเกณฑ์ยอดอย่างชาญฉลาดตามช่วงเดือนปัจจุบันออโต้</p>
+                    <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200">ระบบตรวจสอบเลเวลและเกียรติยศนักออม</h3>
+                    <p class="text-xs text-slate-400">เป้าหมายท้าทายย่อยที่ปรับเกณฑ์ยอดอย่างชาญฉลาดตามช่วงเดือนปัจจุบันออโต้เพื่อช่วยอัปเลเวล XP</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Interactive Challenges -->
+                    <!-- Interactive Challenges (Excludes from Main Net Savings) -->
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855 space-y-6">
                         <div class="flex items-center justify-between border-b pb-4 border-slate-100 dark:border-slate-700">
                             <div>
                                 <h4 id="monthlyChallengeTitle" class="font-extrabold text-slate-700 dark:text-slate-200">ภารกิจท้าทายประจำสัปดาห์</h4>
-                                <p class="text-[11px] text-slate-400 mt-0.5">ปรับเป้าหมายยอดที่ต้องออมอย่างสมเหตุสมผลตามช่วงเวลาปัจจุบัน</p>
+                                <p class="text-[11px] text-slate-400 mt-0.5">ฝากออมพิเศษเพื่อเพิ่มทักษะ (ยอดเงินออมในส่วนนี้จะไม่ถูกนำไปคำนวณรวมกับเงินออมสุทธิทั้งหมด)</p>
                             </div>
                             <span class="text-xs font-bold text-primary-500 bg-primary-100 dark:bg-primary-950/40 px-2.5 py-1 rounded-full animate-pulse" id="challengeMonthProgress">0/15 ครั้ง</span>
                         </div>
@@ -464,7 +500,7 @@
                             <div class="flex justify-between items-center">
                                 <div>
                                     <h5 class="text-sm font-bold text-slate-700 dark:text-slate-200">บันทึกออมในภารกิจประจำเดือน</h5>
-                                    <p class="text-xxs text-slate-400">ออมขยับเพิ่มความสำเร็จทีละก้าวอย่างมั่นคง</p>
+                                    <p class="text-xxs text-slate-400">ออมขยับเพิ่มความสำเร็จทีละก้าวอย่างมั่นคงและสร้างสรรค์วินัย</p>
                                 </div>
                                 <span id="nextSavingAmountText" class="text-sm font-black text-primary-500">฿150</span>
                             </div>
@@ -478,27 +514,10 @@
                                 </button>
                             </div>
                         </div>
-
-                        <!-- 365 Days Challenge Tracker -->
-                        <div class="p-5 border border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-900/30 space-y-3">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h5 class="text-sm font-bold text-slate-700 dark:text-slate-200">ความท้าทายสัจจะ 365 วัน</h5>
-                                    <p class="text-xxs text-slate-400">ฝากเพิ่มพูนขยับเป้ายอดขึ้นทีละบาทในทุกวันอย่างซื่อสัตย์</p>
-                                </div>
-                                <span id="challenge365Progress" class="text-xs font-bold text-primary-500">0/365 วัน</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                                    <div id="challenge365Bar" class="bg-primary-500 h-full animate-all duration-500" style="width: 0%"></div>
-                                </div>
-                                <button onclick="checkIn365Challenge()" class="text-xs bg-slate-100 dark:bg-slate-750 hover:bg-slate-200 dark:hover:bg-slate-650 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl font-bold transition-transform hover:scale-105 border border-slate-200 dark:border-slate-800 whitespace-nowrap">หยอดเงินวันนี้</button>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Achievements checklist -->
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850 space-y-4">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-855 space-y-4">
                         <h4 class="font-bold text-slate-700 dark:text-slate-200">ระบบถ้วยรางวัลความสำเร็จ (Achievements)</h4>
                         <div id="achievementList" class="space-y-3 max-h-[350px] overflow-y-auto pr-1">
                             <!-- JS compiled dynamic achievements -->
@@ -542,7 +561,7 @@
                         </div>
                     </div>
 
-                    <!-- Secure Storage Info & Quick Cloud Reload -->
+                    <!-- Secure Storage Info & Quick Cloud Reload / F5 -->
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-850 space-y-4 flex flex-col justify-between">
                         <div class="space-y-4">
                             <h4 class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-2">
@@ -550,17 +569,17 @@
                                 <span>ความปลอดภัยและการรีโหลดซิงค์ข้อมูล</span>
                             </h4>
                             <p class="text-xs text-slate-400 leading-relaxed">
-                                🔒 **FinSave Encrypted Channel**: เพื่อป้องกันความเสี่ยงในการถูกแฮก คัดลอกโทเค็นสิทธิ์ หรือลักลอบดูแผ่นงานสถิติส่วนบุคคลของคุณผ่านการแอบส่องหน้าจอนี้ รายละเอียดตำแหน่งปลายทางเซิร์ฟเวอร์สำรองข้อมูล Google Drive ได้ถูกเข้ารหัสและซ่อนการแสดงผลไว้ในแกนระบบปฏิบัติการอย่างปลอดภัยสูงสุด
+                                🔒 **FinSave Encrypted Channel**: โทเค็นและ URL ปลายทางของ Google Sheet ของคุณได้รับการเข้ารหัสและซ่อนออกจากหน้าจอนี้เพื่อความปลอดภัยในการโดนคัดลอก อย่างไรก็ตามคุณสามารถกดปุ่มเพื่อสั่งการรีเฟรชหน้าต่างแอปพลิเคชันได้โดยตรง
                             </p>
                             
-                            <!-- ปุ่ม รีโหลดหน้าจอ/f5 (Reload Screen / F5) -->
+                            <!-- ปุ่มรีโหลดหน้าจอ / F5 -->
                             <button onclick="window.location.reload();" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/10">
-                                <i class="fa-solid fa-rotate-right"></i> รีโหลดหน้าจอ / F5 (โหลดแอปพลิเคชันใหม่)
+                                <i class="fa-solid fa-rotate-right"></i> รีโหลดหน้าจอ / F5
                             </button>
                         </div>
 
                         <div class="pt-4 border-t border-slate-150 dark:border-slate-750">
-                            <button onclick="triggerWipeAllDataConfirm()" class="w-full py-3 bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50 rounded-xl text-xs font-bold border border-rose-200 dark:border-rose-900 transition-all">
+                            <button onclick="triggerWipeAllDataConfirm()" class="w-full py-3 bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-455 hover:bg-rose-100 dark:hover:bg-rose-955/50 rounded-xl text-xs font-bold border border-rose-200 dark:border-rose-900 transition-all">
                                 <i class="fa-solid fa-trash-can mr-2"></i> ล้างฐานข้อมูลการออมในเครื่องเครื่องนี้ทั้งหมด
                             </button>
                         </div>
@@ -572,7 +591,7 @@
 
     </div>
 
-    <!-- TRANSACTION MODAL (REALTIME AUTO TIMESTAMPED ON SUBMIT) -->
+    <!-- TRANSACTION MODAL -->
     <div id="txModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden backdrop-blur-sm p-4 animate-all duration-300">
         <div class="bg-white dark:bg-slate-800 max-w-md w-full rounded-3xl p-6 shadow-2xl relative border border-slate-100 dark:border-slate-700 transform transition-all">
             <h3 id="txModalTitle" class="text-lg font-bold text-slate-700 dark:text-slate-200 mb-2">หยอดกระปุกฝากเงินออม 💰</h3>
@@ -606,11 +625,11 @@
         </div>
     </div>
 
-    <!-- GOAL MODAL (AUTOMATIC CURRENT TIMESTAMP DATE ASSIGNED) -->
+    <!-- GOAL MODAL -->
     <div id="goalModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden backdrop-blur-sm p-4 animate-all duration-300">
         <div class="bg-white dark:bg-slate-800 max-w-md w-full rounded-3xl p-6 shadow-2xl relative border border-slate-100 dark:border-slate-700 transform transition-all">
             <h3 id="goalModalTitle" class="text-lg font-bold text-slate-700 dark:text-slate-200 mb-2">สร้างเป้าหมายความฝันใหม่ 🎯</h3>
-            <p class="text-xs text-slate-400 mb-4">เพื่อความสะดวกรวดเร็วระบบจะตั้งค่าระยเวลาสิ้นสุดแผนอัติโนมัติให้เป็น 1 ปีนับจากวันปัจจุบัน เพื่อประมวลผลเปรียบเทียบเชิงสถิติ</p>
+            <p class="text-xs text-slate-400 mb-4">ระบบจะกำหนดแผนงานอัติโนมัติให้เป็นวันที่ปัจจุบันเพื่อใช้ AI คำนวณความเร็วโดยสมบูรณ์</p>
             
             <form id="goalForm" onsubmit="handleGoalSubmit(event)" class="space-y-4">
                 <input type="hidden" id="goalId" value="">
@@ -633,17 +652,17 @@
         </div>
     </div>
 
-    <!-- CUSTOM INTERACTIVE CONFIRM DIALOG MODAL (Complies with NO alert/confirm box constraints) -->
+    <!-- CUSTOM INTERACTIVE CONFIRM DIALOG MODAL -->
     <div id="confirmModal" class="fixed inset-0 z-55 flex items-center justify-center bg-black/60 hidden backdrop-blur-xs p-4 animate-all duration-200">
         <div class="bg-white dark:bg-slate-800 max-w-sm w-full rounded-3xl p-6 shadow-2xl relative border border-slate-100 dark:border-slate-700 transform transition-all">
-            <div class="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/50 text-rose-500 flex items-center justify-center text-xl mb-4">
+            <div class="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-955/50 text-rose-500 flex items-center justify-center text-xl mb-4">
                 <i class="fa-solid fa-circle-question"></i>
             </div>
             <h4 id="confirmModalTitle" class="text-md font-bold text-slate-700 dark:text-slate-200 mb-1">ยืนยันดำเนินการ?</h4>
-            <p id="confirmModalBody" class="text-xs text-slate-400 leading-relaxed mb-6">คุณแน่ใจหรือไม่ที่จะยืนยันดำเนินการในขั้นตอนนี้ข้อมูลบางส่วนอาจสูญหาย</p>
+            <p id="confirmModalBody" class="text-xs text-slate-400 leading-relaxed mb-6">คุณแน่ใจหรือไม่ที่จะยืนยันดำเนินการในขั้นตอนนี้ ข้อมูลเดิมอาจถูกปรับปรุง</p>
             
             <div class="flex space-x-3">
-                <button id="confirmModalCancelBtn" onclick="closeConfirmModal(false)" class="w-1/2 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs">ยกเลิก</button>
+                <button id="confirmModalCancelBtn" onclick="closeConfirmModal(false)" class="w-1/2 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-650 dark:text-slate-300 font-bold rounded-xl text-xs">ยกเลิก</button>
                 <button id="confirmModalConfirmBtn" class="w-1/2 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-xs">ตกลงดำเนินการ</button>
             </div>
         </div>
@@ -651,6 +670,10 @@
 
     <!-- MAIN CONTROL SCRIPT -->
     <script>
+        // DECLARE GLOBALS AT THE VERY TOP OF THE SCRIPT TO PREVENT REFERENCE ERRORS (V2.5.4)
+        var savingsChartInstance = null;
+        var compChartInstance = null;
+
         // DOM Safe Access Utilities to avoid "Cannot set properties of null" errors
         const DOM = {
             setText: (id, val) => {
@@ -668,14 +691,14 @@
             get: (id) => document.getElementById(id)
         };
 
-        // HARDCODED SECURED SHEETS CONNECTIONS (ENCRYPTED / PROTECTED FROM USER UI INTRUSION)
+        // HARDCODED SECURED SHEETS CONNECTIONS (ENCRYPTED / PROTECTED)
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbziTWL_g74LGUnx54iLhQ1OzC2MuidNzT46tEjnwV-SE7-FH3rFxf0-pZ2Rk8M6df2T/exec";
         const SPREADSHEET_ID = "1HheQAtac9YEYZHyFEkt001-_YwG8DoS7IC4ubircSJY";
 
         // Local Storage Cache Key ID
         const CACHE_KEY = "FINSAVE_PRO_2026_DATA_v4_FINAL";
 
-        // Application Global State
+        // Application Global State (Includes challenge_deposit inside transactions list)
         let state = {
             transactions: [],
             goals: [],
@@ -700,17 +723,48 @@
         window.onload = function() {
             initApp();
             simulateReminderAlert();
+            startMaintenanceLockChecker(); // Maintenance lock (23:00 - 00:00)
         };
 
+        // 23:00 - 00:00 MAINTENANCE WATCHER ENGINE
+        function startMaintenanceLockChecker() {
+            function checkTime() {
+                const now = new Date();
+                const hrs = now.getHours();
+                const mnts = now.getMinutes();
+                const secs = now.getSeconds();
+
+                // Lockout condition: Hour is exactly 23:xx
+                if (hrs === 23) {
+                    const overlay = DOM.get('maintenanceLockoutOverlay');
+                    const app = DOM.get('mainAppContent');
+                    if (overlay) overlay.classList.remove('hidden');
+                    if (app) app.classList.add('hidden');
+
+                    const remainingMins = 59 - mnts;
+                    const remainingSecs = 59 - secs;
+                    
+                    const formatTime = (v) => String(v).padStart(2, '0');
+                    DOM.setText('lockoutCountdown', `00:${formatTime(remainingMins)}:${formatTime(remainingSecs)}`);
+                } else {
+                    const overlay = DOM.get('maintenanceLockoutOverlay');
+                    const app = DOM.get('mainAppContent');
+                    if (overlay) overlay.classList.add('hidden');
+                    if (app) app.classList.remove('hidden');
+                }
+            }
+
+            checkTime();
+            setInterval(checkTime, 1000);
+        }
+
         function initApp() {
-            // Apply theme switch based on system / local cache
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');
             }
 
-            // Sync with local data
             const cachedData = localStorage.getItem(CACHE_KEY);
             if (cachedData) {
                 try {
@@ -720,13 +774,8 @@
                 }
             }
 
-            // Update Current dynamic Month Details on Challenges Title
             updateMonthlyChallengeTheme();
-
-            // Run rendering engine
             renderAll();
-            
-            // Sync Sheet after render
             syncWithGoogleSheets();
         }
 
@@ -742,7 +791,6 @@
             desktopSidebarCollapsed = !desktopSidebarCollapsed;
 
             if (desktopSidebarCollapsed) {
-                // Collapse sidebar
                 if (sidebar) {
                     sidebar.classList.remove('w-64');
                     sidebar.classList.add('w-20', 'px-3');
@@ -752,7 +800,6 @@
                 if (brandExpanded) brandExpanded.classList.add('hidden');
                 if (brandCollapsed) brandCollapsed.classList.remove('hidden');
             } else {
-                // Expand sidebar
                 if (sidebar) {
                     sidebar.classList.remove('w-20', 'px-3');
                     sidebar.classList.add('w-64');
@@ -762,7 +809,6 @@
                 if (brandExpanded) brandExpanded.classList.remove('hidden');
                 if (brandCollapsed) brandCollapsed.classList.add('hidden');
             }
-            // Redraw charts with animation inside layout frames
             setTimeout(drawAllCharts, 250);
         }
 
@@ -789,7 +835,7 @@
             }
         }
 
-        // Theme Toggle handlers (Adaptive Desktop + Mobile)
+        // Theme Toggle handlers
         const themeToggleBtn = DOM.get('themeToggle');
         const themeToggleMobileBtn = DOM.get('themeToggleMobile');
         
@@ -804,49 +850,31 @@
                 document.documentElement.classList.add('dark');
                 localStorage.theme = 'dark';
             }
-            // Update charts after toggle to match axis colors
             setTimeout(drawAllCharts, 150);
         }
 
         // Smart Adaptive Tab Switching Engine
         function switchTab(tabId) {
-            // Hide all tab containers
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             const targetTab = DOM.get(`tab-${tabId}`);
             if (targetTab) targetTab.classList.remove('hidden');
 
-            // Reset Desktop Sidebar Buttons classes
             document.querySelectorAll('.sidebar-btn').forEach(btn => {
                 btn.classList.remove('bg-primary-500', 'text-white', 'shadow-md');
                 btn.classList.add('text-slate-500', 'dark:text-slate-400', 'hover:bg-slate-100', 'dark:hover:bg-slate-900');
             });
 
-            // Set Active Desktop Sidebar button
             const activeSidebarBtn = DOM.get(`sidebarBtn-${tabId}`);
             if (activeSidebarBtn) {
                 activeSidebarBtn.classList.remove('text-slate-500', 'dark:text-slate-400', 'hover:bg-slate-100', 'dark:hover:bg-slate-900');
                 activeSidebarBtn.classList.add('bg-primary-500', 'text-white', 'shadow-md');
             }
 
-            // Reset Mobile Bottom Tab Buttons classes
-            document.querySelectorAll('.mobile-tab').forEach(btn => {
-                btn.classList.remove('text-primary-500', 'font-bold');
-                btn.classList.add('text-slate-400');
-            });
-
-            // Set Active Mobile Bottom navigation tab
-            const activeMobileBtn = DOM.get(`mobileBtn-${tabId}`);
-            if (activeMobileBtn) {
-                activeMobileBtn.classList.remove('text-slate-400');
-                activeMobileBtn.classList.add('text-primary-500', 'font-bold');
-            }
-
-            // Close Mobile Sidebar slide if open
             if (mobileSidebarOpen) {
                 toggleMobileSidebar();
             }
 
-            // Draw/re-render charts for specific layout tabs to prevent scaling glitches
+            // Redraw charts safely after UI switch
             if (tabId === 'dashboard' || tabId === 'analysis') {
                 setTimeout(drawAllCharts, 100);
             }
@@ -874,7 +902,6 @@
             }
         }
 
-        // Set up custom Modal click listeners
         DOM.get('confirmModalConfirmBtn')?.addEventListener('click', () => {
             closeConfirmModal(true);
         });
@@ -914,14 +941,12 @@
             }, 5000);
         }
 
-        // Trigger Automated Passive Saving Reminder popup on startup
         function simulateReminderAlert() {
             setTimeout(() => {
-                showToast("💡 ข้อแนะนำวันนี้: ความสม่ำเสมอในการออมเงินในยอดเล็กๆ ส่งผลสำเร็จยิ่งใหญ่เกินกว่าฝากออมในครั้งเดียว!", "reminder");
+                showToast("💡 ข้อแนะนำวันนี้: ค่อยเป็นค่อยไป สะสมวินัยวันละนิดเพื่ออิสรภาพการเงินที่ยั่งยืน!", "reminder");
             }, 2500);
         }
 
-        // Dynamic Title updates based on today's month
         function updateMonthlyChallengeTheme() {
             const months = [
                 "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
@@ -931,7 +956,7 @@
             DOM.setText('monthlyChallengeTitle', `ภารกิจสัจจะสะสมออมทรัพย์เดือน${currentMonthName}`);
         }
 
-        // SYNC BACKEND SCRIPT TO SHEETS (Uses secured variables hidden from settings UI)
+        // SYNC BACKEND SCRIPT TO SHEETS
         async function syncWithGoogleSheets() {
             if (!WEB_APP_URL || WEB_APP_URL.includes("your-app-script-id")) return;
 
@@ -940,18 +965,10 @@
             const text = DOM.get('syncText');
             const mobileDot = DOM.get('mobileSyncIndicator');
 
-            if (dot) {
-                dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500";
-            }
-            if (dotPing) {
-                dotPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75";
-            }
-            if (text) {
-                text.innerHTML = "กำลังซิงค์แผ่นงาน...";
-            }
-            if (mobileDot) {
-                mobileDot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
-            }
+            if (dot) dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500";
+            if (dotPing) dotPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75";
+            if (text) text.innerHTML = "กำลังซิงค์แผ่นงาน...";
+            if (mobileDot) mobileDot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
 
             try {
                 await fetch(WEB_APP_URL, {
@@ -965,38 +982,21 @@
                 });
 
                 setTimeout(() => {
-                    if (dot) {
-                        dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500";
-                    }
-                    if (dotPing) {
-                        dotPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
-                    }
-                    if (text) {
-                        text.innerHTML = "คลาวด์เชื่อมโยงสมบูรณ์";
-                    }
-                    if (mobileDot) {
-                        mobileDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-                    }
+                    if (dot) dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500";
+                    if (dotPing) dotPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
+                    if (text) text.innerHTML = "คลาวด์เชื่อมโยงสมบูรณ์";
+                    if (mobileDot) mobileDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
                 }, 1000);
                 
             } catch (err) {
                 console.error("Sheets backup connection err:", err);
-                if (dot) {
-                    dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500";
-                }
-                if (dotPing) {
-                    dotPing.className = "";
-                }
-                if (text) {
-                    text.innerHTML = "ออฟไลน์ (เซฟในเครื่อง)";
-                }
-                if (mobileDot) {
-                    mobileDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
-                }
+                if (dot) dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500";
+                if (dotPing) dotPing.className = "";
+                if (text) text.innerHTML = "ออฟไลน์ (เซฟในเครื่อง)";
+                if (mobileDot) mobileDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
             }
         }
 
-        // SAVE & UPDATE CONTROLLER
         function saveState() {
             localStorage.setItem(CACHE_KEY, JSON.stringify(state));
             renderAll();
@@ -1015,25 +1015,26 @@
             drawAllCharts();
         }
 
-        // CHARTS COMPILER
-        let savingsChartInstance = null;
-        let compChartInstance = null;
-
         function drawAllCharts() {
             drawMainChart();
             drawComparisonChart();
         }
 
-        // Main Accumulated Line Chart (Rendered inside Analysis Hub)
+        // Main Accumulated Line Chart (Uses only normal deposit transactions)
         function drawMainChart() {
             const ctx = DOM.get('savingsMainChart');
             if (!ctx) return;
 
+            // SAFELY RESET / DESTROY TO PREVENT RE-RENDER CRASHES (V2.5.4)
             if (savingsChartInstance) {
                 savingsChartInstance.destroy();
+                savingsChartInstance = null;
             }
 
-            const sortedTx = [...state.transactions].sort((a,b) => new Date(a.datetime) - new Date(b.datetime));
+            // FILTER OUT challenge_deposit from Main accumulated Line Chart
+            const sortedTx = [...state.transactions]
+                .filter(tx => tx.type !== 'challenge_deposit')
+                .sort((a,b) => new Date(a.datetime) - new Date(b.datetime));
             
             let labels = [];
             let dataPoints = [];
@@ -1060,7 +1061,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'เงินออมสะสม (฿)',
+                        label: 'เงินออมสะสมหลัก (฿)',
                         data: dataPoints,
                         borderColor: '#22c55e',
                         backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -1089,21 +1090,25 @@
             });
         }
 
-        // Animated Bar Chart (Updates immediately on saving)
+        // Animated Bar Chart (Monthly normal deposits compare)
         function drawComparisonChart() {
             const ctx = DOM.get('savingsComparisonChart');
             if (!ctx) return;
 
+            // SAFELY RESET / DESTROY TO PREVENT RE-RENDER CRASHES (V2.5.4)
             if (compChartInstance) {
                 compChartInstance.destroy();
+                compChartInstance = null;
             }
 
-            // Group by year-month for comparison bar graph
+            // Group by year-month for comparison bar graph (Excludes challenge_deposit)
             const monthlySums = {};
-            state.transactions.forEach(tx => {
-                const monthLabel = new Date(tx.datetime).toLocaleDateString('th-TH', {year: '2-digit', month: 'short'});
-                monthlySums[monthLabel] = (monthlySums[monthLabel] || 0) + tx.amount;
-            });
+            state.transactions
+                .filter(tx => tx.type !== 'challenge_deposit')
+                .forEach(tx => {
+                    const monthLabel = new Date(tx.datetime).toLocaleDateString('th-TH', {year: '2-digit', month: 'short'});
+                    monthlySums[monthLabel] = (monthlySums[monthLabel] || 0) + tx.amount;
+                });
 
             let labels = Object.keys(monthlySums);
             let data = Object.values(monthlySums);
@@ -1153,15 +1158,17 @@
             });
         }
 
-        // STREAK & LEVEL XP ENGINE
+        // STREAK & LEVEL XP ENGINE (Calculates all normal transactions)
         function calculateStreak() {
-            if (state.transactions.length === 0) {
+            const normalTx = state.transactions.filter(t => t.type !== 'challenge_deposit');
+            
+            if (normalTx.length === 0) {
                 state.streak = 0;
                 DOM.setText('streakCount', '0');
                 return;
             }
 
-            const dates = state.transactions
+            const dates = normalTx
                 .map(tx => new Date(tx.datetime).toDateString())
                 .filter((v, i, a) => a.indexOf(v) === i)
                 .map(d => new Date(d))
@@ -1207,7 +1214,7 @@
             state.streak = currentStreak;
             DOM.setText('streakCount', state.streak);
 
-            // Compute XP values based on deposits count and complete goals count
+            // Compute XP values based on deposits count (includes challenge_deposit to give rewards for challenges!)
             const xp = (state.transactions.length * 15) + (state.goals.filter(g => getGoalProgress(g) >= 100).length * 150);
             const level = Math.floor(xp / 100) + 1;
             const currentExp = xp % 100;
@@ -1219,7 +1226,7 @@
                     badge.className = "text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-955/40 text-amber-600 dark:text-amber-400";
                 } else if (level < 6) {
                     badge.innerText = "Silver Saver";
-                    badge.className = "text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-750 text-slate-600 dark:text-slate-300";
+                    badge.className = "text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-755 text-slate-600 dark:text-slate-300";
                 } else {
                     badge.innerText = "Gold Saver";
                     badge.className = "text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-300";
@@ -1241,9 +1248,15 @@
         // GOAL PROGRESS HELPERS
         function getGoalProgress(goal) {
             const sum = state.transactions
-                .filter(t => t.goalId === goal.id)
+                .filter(t => t.goalId === goal.id && t.type !== 'challenge_deposit')
                 .reduce((total, t) => total + t.amount, 0);
             return Math.min(100, Math.max(0, (sum / goal.targetAmount) * 100));
+        }
+
+        function getGoalCurrentAmount(goal) {
+            return state.transactions
+                .filter(t => t.goalId === goal.id && t.type !== 'challenge_deposit')
+                .reduce((total, t) => total + t.amount, 0);
         }
 
         // Helper functions to safely update elements
@@ -1260,10 +1273,12 @@
             if (el && el.style) el.style[prop] = val;
         };
 
+        // CALCULATE MONTHLY AVERAGE (Restored safely in V2.5.4 patch)
         function calculateMonthlyAverage() {
-            if (state.transactions.length === 0) return 0;
+            const normalTx = state.transactions.filter(t => t.type !== 'challenge_deposit');
+            if (normalTx.length === 0) return 0;
             const sums = {};
-            state.transactions.forEach(tx => {
+            normalTx.forEach(tx => {
                 const month = tx.datetime.substring(0, 7);
                 sums[month] = (sums[month] || 0) + tx.amount;
             });
@@ -1271,16 +1286,14 @@
             return values.reduce((tot, v) => tot + v, 0) / values.length;
         }
 
-        function getGoalCurrentAmount(goal) {
-            return state.transactions
-                .filter(t => t.goalId === goal.id)
-                .reduce((total, t) => total + t.amount, 0);
-        }
-
-        // DASHBOARD CALCULATIONS (Using secure null-safe properties)
+        // DASHBOARD CALCULATIONS (Using secure null-safe properties, excludes challenge deposits)
         function renderDashboardStats() {
-            const netTotal = state.transactions.reduce((total, tx) => total + tx.amount, 0);
-            DOM.setText('dashboardTotalSavings', `฿${netTotal.toLocaleString('th-TH', {minimumFractionDigits: 2})}`);
+            // Net Total Savings - EXCLUDE challenge_deposit completely
+            const normalSavings = state.transactions
+                .filter(tx => tx.type !== 'challenge_deposit')
+                .reduce((total, tx) => total + tx.amount, 0);
+            
+            DOM.setText('dashboardTotalSavings', `฿${normalSavings.toLocaleString('th-TH', {minimumFractionDigits: 2})}`);
 
             const goalsCount = state.goals.length;
             const successGoals = state.goals.filter(g => getGoalProgress(g) >= 100).length;
@@ -1291,9 +1304,9 @@
             const monthlyAvg = calculateMonthlyAverage();
             DOM.setText('dashAvgSavingMonth', `฿${monthlyAvg.toLocaleString('th-TH', {minimumFractionDigits: 2})}`);
 
-            // Emergency Tracker calculation
+            // Emergency Tracker calculation (normal unassigned savings)
             const unassignedSavings = state.transactions
-                .filter(t => !t.goalId)
+                .filter(t => !t.goalId && t.type !== 'challenge_deposit')
                 .reduce((total, tx) => total + tx.amount, 0);
 
             const targetEmergency = state.emergencyFund.expense * state.emergencyFund.months;
@@ -1343,7 +1356,7 @@
             }
         }
 
-        // SUBMIT TRANSACTIONS WITH AUTOMATIC DATETIME (NO MANUAL INPUT DATE)
+        // SUBMIT TRANSACTIONS WITH AUTOMATIC DATETIME
         function openTransactionModal(editId = null) {
             const modal = DOM.get('txModal');
             const title = DOM.get('txModalTitle');
@@ -1371,6 +1384,7 @@
             if (modal) modal.classList.remove('hidden');
         }
 
+        // closeTxModal: hides the transactional entry dialog
         function closeTxModal() {
             const modal = DOM.get('txModal');
             if (modal) modal.classList.add('hidden');
@@ -1390,29 +1404,27 @@
             const goalId = goalSelect.value;
             const note = noteInput.value;
 
-            // Captured automatically on submission
             const currentTimestamp = new Date().toISOString();
 
             if (id) {
                 const index = state.transactions.findIndex(t => t.id === id);
                 if (index !== -1) {
                     state.transactions[index] = { ...state.transactions[index], amount, goalId, note };
-                    showToast("แก้ไขบันทึกการฝากสำเร็จ");
+                    showToast("แก้ไขบันทึกสำเร็จ");
                 }
             } else {
                 const newTx = {
                     id: 'tx-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-                    type: 'deposit',
+                    type: 'deposit', // normal deposit
                     amount,
                     goalId,
-                    datetime: currentTimestamp, // Auto-timestamp
+                    datetime: currentTimestamp,
                     note
                 };
                 
                 state.transactions.push(newTx);
                 showToast(`สำเร็จ! ยอดออมเพิ่มขึ้น +฿${amount.toLocaleString()}`);
 
-                // Check and trigger goal achievements milestone notifications
                 if (goalId) {
                     const goal = state.goals.find(g => g.id === goalId);
                     if (goal) {
@@ -1444,9 +1456,10 @@
             const tableBody = DOM.get('txFullTableBody');
             const dashTableBody = DOM.get('dashTxTableBody');
 
+            // Sort all transactions chronologically (Newest first)
             let filtered = [...state.transactions].sort((a,b) => new Date(b.datetime) - new Date(a.datetime));
 
-            // Dashboard mini historical summary
+            // Dashboard mini historical summary (Displays both normal deposits & monthly challenge deposits)
             if (dashTableBody) {
                 const miniFiltered = filtered.slice(0, 5);
                 if (miniFiltered.length === 0) {
@@ -1454,11 +1467,18 @@
                 } else {
                     dashTableBody.innerHTML = miniFiltered.map(tx => {
                         const goal = state.goals.find(g => g.id === tx.goalId);
+                        const isChallenge = tx.type === 'challenge_deposit';
                         return `
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
                                 <td class="py-3 text-xs font-semibold">${new Date(tx.datetime).toLocaleString('th-TH')}</td>
-                                <td class="py-3 text-xs"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600">หยอดฝาก</span></td>
-                                <td class="py-3 text-xs font-bold text-emerald-500">+฿${tx.amount.toLocaleString()}</td>
+                                <td class="py-3 text-xs">
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isDarkChallengeColor(isChallenge)}">
+                                        ${isChallenge ? 'ออมภารกิจ' : 'หยอดฝาก'}
+                                    </span>
+                                </td>
+                                <td class="py-3 text-xs font-bold ${isChallenge ? 'text-indigo-400 dark:text-indigo-300' : 'text-emerald-500'}">
+                                    +฿${tx.amount.toLocaleString()}
+                                </td>
                                 <td class="py-3 text-xs max-w-[120px] truncate">${goal ? goal.name : '<span class="text-slate-400">ทั่วไป</span>'}</td>
                                 <td class="py-3 text-xs text-slate-400 max-w-[150px] truncate">${tx.note || '-'}</td>
                             </tr>
@@ -1474,17 +1494,22 @@
                 } else {
                     tableBody.innerHTML = filtered.map(tx => {
                         const goal = state.goals.find(g => g.id === tx.goalId);
+                        const isChallenge = tx.type === 'challenge_deposit';
                         return `
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-850/50 transition-colors">
                                 <td class="p-4 text-xs font-semibold">${new Date(tx.datetime).toLocaleString('th-TH')}</td>
                                 <td class="p-4 text-xs">
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">หยอดกระปุก</span>
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold ${isDarkChallengeColor(isChallenge)}">
+                                        ${isChallenge ? 'ออมภารกิจพิเศษ' : 'หยอดกระปุกหลัก'}
+                                    </span>
                                 </td>
-                                <td class="p-4 text-sm font-bold text-emerald-500">+฿${tx.amount.toLocaleString()}</td>
+                                <td class="p-4 text-sm font-bold ${isChallenge ? 'text-indigo-500 dark:text-indigo-400' : 'text-emerald-500'}">
+                                    +฿${tx.amount.toLocaleString()}
+                                </td>
                                 <td class="p-4 text-xs font-semibold">${goal ? `<span class="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded-md text-xs">${goal.name}</span>` : '<span class="text-slate-400">ออมทั่วไป</span>'}</td>
                                 <td class="p-4 text-xs text-slate-455">${tx.note || '-'}</td>
                                 <td class="p-4 text-xs text-center space-x-1.5 whitespace-nowrap">
-                                    <button onclick="openTransactionModal('${tx.id}')" class="p-2 text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick="openTransactionModal('${tx.id}')" class="p-2 text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-955/30 rounded-lg"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button onclick="deleteTx('${tx.id}')" class="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg"><i class="fa-solid fa-trash-can"></i></button>
                                 </td>
                             </tr>
@@ -1492,6 +1517,12 @@
                     }).join('');
                 }
             }
+        }
+
+        function isDarkChallengeColor(isChallenge) {
+            return isChallenge 
+                ? 'bg-indigo-50 dark:bg-indigo-955/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/30' 
+                : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400';
         }
 
         // Live Lookup filtering
@@ -1552,10 +1583,9 @@
             const name = nameInput.value;
             const targetAmount = parseFloat(amtInput.value);
 
-            // AUTOMATICALLY ASSIGN A 1-YEAR TARGET FROM TODAY'S DATE
-            const autoEndDate = new Date();
-            autoEndDate.setFullYear(autoEndDate.getFullYear() + 1);
-            const endDateString = autoEndDate.toISOString().split('T')[0];
+            // AUTOMATICALLY ASSIGN CURRENT DATE TO THE PLAN AS TARGET DATE (V2.5.2+)
+            const today = new Date();
+            const endDateString = today.toISOString().split('T')[0];
 
             if (id) {
                 const index = state.goals.findIndex(g => g.id === id);
@@ -1634,7 +1664,7 @@
 
             if (state.goals.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full text-center py-12 bg-white dark:bg-slate-800 rounded-3xl border border-dashed border-slate-200 dark:border-slate-850">
+                    <div class="col-span-full text-center py-12 bg-white dark:bg-slate-800 rounded-3xl border border-dashed border-slate-200 dark:border-slate-855">
                         <i class="fa-solid fa-bullseye text-4xl text-slate-300 mb-3"></i>
                         <p class="text-slate-500 dark:text-slate-400 text-sm">คุณยังไม่มีเป้าหมายออมเงิน มาเริ่มสร้างแผนความฝันแรกกันเถอะ!</p>
                         <button onclick="openGoalModal()" class="mt-4 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-sm">สร้างเป้าหมายแรก</button>
@@ -1643,12 +1673,9 @@
                 return;
             }
 
-            const today = new Date();
             container.innerHTML = state.goals.map((goal, idx) => {
                 const current = getGoalCurrentAmount(goal);
                 const progressPct = getGoalProgress(goal);
-                const endDate = new Date(goal.endDate);
-                const daysRemaining = Math.max(0, Math.ceil((endDate - today) / (1000 * 60 * 60 * 24)));
                 const styleMeta = getGoalIconAndGradient(goal.name, idx);
                 
                 return `
@@ -1658,7 +1685,7 @@
                             <div class="flex justify-between items-start">
                                 <span class="text-3xl">${styleMeta.emoji}</span>
                                 <span class="bg-white/20 backdrop-blur-md text-white font-bold px-2 py-0.5 rounded-lg text-[9px]">
-                                    ${daysRemaining > 0 ? `แผน 1 ปี / เหลือ ${daysRemaining} วัน` : 'สิ้นระยะการคำนวณ'}
+                                    ออมปัจจุบัน / แผนงานเสร็จสิ้น
                                 </span>
                             </div>
                             <div>
@@ -1683,7 +1710,7 @@
                             </div>
 
                             <div class="flex gap-2 pt-2 border-t border-slate-50 dark:border-slate-755">
-                                <button onclick="openGoalSavingTx('${goal.id}')" class="flex-1 py-2 bg-indigo-50 dark:bg-indigo-955/40 text-indigo-600 dark:text-indigo-400 rounded-xl font-bold text-xs hover:bg-indigo-100 transition-colors">
+                                <button onclick="openGoalSavingTx('${goal.id}')" class="flex-1 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl font-bold text-xs hover:bg-indigo-100 transition-colors">
                                     <i class="fa-solid fa-piggy-bank mr-1"></i> หยอดกระปุก
                                 </button>
                                 <button onclick="openGoalModal('${goal.id}')" class="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -1701,16 +1728,64 @@
             if (selectGoal) selectGoal.value = goalId;
         }
 
-        // ==================== TAB: AI & ANALYSIS MODULE ====================
+        // ==================== TAB: AI GLOBAL FORECASTING ENGINE ====================
         function renderAiAnalysis() {
             const container = DOM.get('aiAnalysisResults');
+            const summaryContainer = DOM.get('aiGlobalTextContent');
             if (!container) return;
 
+            const normalTx = state.transactions.filter(t => t.type !== 'challenge_deposit');
+            const totalNormalSavings = normalTx.reduce((sum, tx) => sum + tx.amount, 0);
+
+            // Compute global statistics for AI summary
             if (state.goals.length === 0) {
                 container.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs">ยังไม่มีเป้าหมายเพื่อใช้วิเคราะห์ในขณะนี้</div>`;
+                if (summaryContainer) {
+                    summaryContainer.innerHTML = `
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400">
+                            ยังไม่มีแผนเป้าหมายใดๆ ในระบบเพื่อจำลองพยากรณ์รวม โปรดสร้างแผนแรกของคุณเพื่อรับคำปรึกษาอัจฉริยะแบบรอบด้าน!
+                        </div>
+                    `;
+                }
                 return;
             }
 
+            // Calculations for AI global summary
+            let totalTargetRequired = state.goals.reduce((sum, g) => sum + g.targetAmount, 0);
+            let totalCurrentGoalSavings = state.goals.reduce((sum, g) => sum + getGoalCurrentAmount(g), 0);
+            let unassignedSavings = normalTx.filter(t => !t.goalId).reduce((sum, tx) => sum + tx.amount, 0);
+            let averageDeposit = normalTx.length > 0 ? (totalNormalSavings / normalTx.length) : 0;
+            
+            // Build dynamic text content for AI global forecaster
+            let healthRating = "ปานกลาง";
+            let actionAdvice = "แนะนำเพิ่มสัดส่วนการออมเป้าหมายโดยตรง";
+
+            if (totalCurrentGoalSavings >= totalTargetRequired * 0.7) {
+                healthRating = "แข็งแกร่งมาก ⭐⭐⭐";
+                actionAdvice = "คุณมีอัตราการออมที่ดีเยี่ยม แนะนำให้เริ่มจัดสรรปันส่วนไปที่เกราะป้องกันหรือประกันสุขภาพเพิ่มเติม";
+            } else if (totalNormalSavings > 0 && unassignedSavings > totalNormalSavings * 0.5) {
+                healthRating = "ปลอดภัยแต่ยังไม่โฟกัส 🛡️";
+                actionAdvice = "คุณมีเงินเก็บทั่วไปจำนวนมาก แนะนำให้โอนแบ่งยอดมาเติมในเป้าหมายความฝันเพื่อให้บรรลุวัตถุประสงค์เร็วขึ้น";
+            } else if (averageDeposit < 500 && state.goals.length > 3) {
+                healthRating = "เริ่มตึงตัว ⚠️";
+                actionAdvice = "คุณมีแผนเป้าหมายจำนวนมากแต่สปีดการเก็บค่อนข้างน้อย แนะนำให้ยุบหรือโฟกัสออมเป้าหมายสูงสุดทีละอย่าง";
+            }
+
+            if (summaryContainer) {
+                summaryContainer.innerHTML = `
+                    <div class="space-y-1 text-slate-600 dark:text-slate-300">
+                        <div class="flex justify-between"><span>ประเมินสุขภาพการเงิน:</span><span class="font-bold text-indigo-500">${healthRating}</span></div>
+                        <div class="flex justify-between"><span>ยอดเป้าหมายรวม:</span><span class="font-bold">฿${totalTargetRequired.toLocaleString()}</span></div>
+                        <div class="flex justify-between"><span>ยอดออมสะสมเข้าแผน:</span><span class="font-bold text-emerald-500">฿${totalCurrentGoalSavings.toLocaleString()}</span></div>
+                        <div class="flex justify-between"><span>สัดส่วนเฉลี่ยต่อฝาก:</span><span class="font-bold text-indigo-400">฿${Math.round(averageDeposit).toLocaleString()}</span></div>
+                        <div class="mt-2 text-[11px] text-slate-500 border-t border-slate-200/50 dark:border-slate-800/50 pt-2 italic leading-relaxed">
+                            "${actionAdvice}"
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Detail calculation per goal (Visual bars)
             const today = new Date();
             const html = state.goals.map(goal => {
                 const current = getGoalCurrentAmount(goal);
@@ -1719,7 +1794,7 @@
 
                 if (remaining <= 0) {
                     return `
-                        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 rounded-2xl flex items-start space-x-2.5 shadow-xs">
+                        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100/50 dark:border-emerald-900/50 rounded-2xl flex items-start space-x-2.5 shadow-xs">
                             <span class="text-emerald-500 mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
                             <div>
                                 <h5 class="text-xs font-bold text-emerald-700 dark:text-emerald-300">${goal.name} (สำเร็จ)</h5>
@@ -1729,10 +1804,7 @@
                     `;
                 }
 
-                const end = new Date(goal.endDate);
-                const daysRemaining = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-                
-                const goalTxs = state.transactions.filter(t => t.goalId === goal.id);
+                const goalTxs = state.transactions.filter(t => t.goalId === goal.id && t.type !== 'challenge_deposit');
                 let dailyAvg = 0;
                 if (goalTxs.length > 0) {
                     const firstTx = new Date(Math.min(...goalTxs.map(t => new Date(t.datetime))));
@@ -1743,23 +1815,15 @@
                 let predictionText = "";
                 let indicatorClass = "";
 
-                if (daysRemaining <= 0) {
-                    predictionText = `เกินระยะเวลากำหนดในแผนที่วางไว้แล้ว ต้องการเงินฝากสะสมเพิ่มอีก ฿${remaining.toLocaleString()} เพื่อให้บรรลุเสร็จสิ้น`;
-                    indicatorClass = "border-rose-100 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400";
-                } else if (dailyAvg <= 0) {
-                    predictionText = `ยังไม่มีอัตราการเดินฝากเงินออมในเป้าหมายนี้ เริ่มหยอดออมครั้งแรกวันนี้เพื่อช่วยให้ AI คำนวณประเมินผลตามแผนได้แม่นยำยิ่งขึ้น`;
-                    indicatorClass = "border-amber-100 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/10 text-amber-700 dark:text-amber-400";
+                if (dailyAvg <= 0) {
+                    predictionText = `ยังไม่มีประวัติสถิติการเดินบัญชีในฝากทรัพย์เป้าหมายนี้ เริ่มหยอดฝากครั้งแรกวันนี้เพื่อช่วยประมวลผลความคืบหน้าเชิงสถิติต่อไป`;
+                    indicatorClass = "border-amber-100 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-955/10 text-amber-700 dark:text-amber-400";
                 } else {
                     const projectedDaysToHit = remaining / dailyAvg;
                     const expectedFinishDate = new Date(today.getTime() + (projectedDaysToHit * 24 * 60 * 60 * 1000));
                     
-                    if (projectedDaysToHit <= daysRemaining) {
-                        predictionText = "พยากรณ์อัจฉริยะ: จากสถิติล่าสุด คาดว่าจะฝากครบในอีก " + Math.ceil(projectedDaysToHit) + " วัน (ประมาณช่วงวันที่ " + expectedFinishDate.toLocaleDateString('th-TH') + ") เร็วกว่าที่ตั้งใจไว้!";
-                        indicatorClass = "border-emerald-100 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400";
-                    } else {
-                        predictionText = "พยากรณ์อัจฉริยะ: สปีดความเร็วล่าช้ากว่าแผนเดิม คาดว่าเสร็จจริงในอีก " + Math.ceil(projectedDaysToHit) + " วัน (วันที่ " + expectedFinishDate.toLocaleDateString('th-TH') + ") แนะนำให้ปรับสปีดเงินออมเพิ่มขึ้นครับ";
-                        indicatorClass = "border-rose-100 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400";
-                    }
+                    predictionText = "พยากรณ์คาดเดาความสำเร็จ: คาดว่าจะสามารถฝากสะสมได้ครบตามเป้าหมายหลักในอีก " + Math.ceil(projectedDaysToHit) + " วัน (ประมาณวันที่ " + expectedFinishDate.toLocaleDateString('th-TH') + ")";
+                    indicatorClass = "border-emerald-100 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400";
                 }
 
                 return `
@@ -1776,49 +1840,27 @@
             container.innerHTML = html;
         }
 
-        // ==================== TAB: CHALLENGES & MOTIVATIONS ====================
+        // ==================== TAB: CHALLENGES & MOTIVATIONS (V2.5.4 EXCLUDES CHALLENGE FROM NET) ====================
         function commitMonthlyChallenge() {
             const currentCounter = (state.challenges.monthlyCount || 0) + 1;
             const targetSave = currentCounter * 50 + 100; // Step scaling
 
             const newTx = {
                 id: 'tx-monthly-challenge-' + Date.now(),
-                type: 'deposit',
+                type: 'challenge_deposit', // SPECIAL TYPE: NOT counted in main Net Savings
                 amount: targetSave,
                 goalId: "",
                 datetime: new Date().toISOString(),
-                note: `ออมสะสมผ่านภารกิจสัจจะความเพียร (ครั้งที่ ${currentCounter})`
+                note: `ออมภารกิจสะสมวินัยรายสัปดาห์ (ครั้งที่ ${currentCounter}) [ภารกิจความเพียร]`
             };
 
             state.transactions.push(newTx);
             state.challenges.monthlyCount = currentCounter;
-            showToast("สำเร็จภารกิจประจำสัปดาห์!", "success");
+            showToast(`สำเร็จขั้นภารกิจที่ ${currentCounter}! ยอดสะสมภารกิจส่วนตัว +฿${targetSave}`, "success");
             saveState();
         }
 
-        function checkIn365Challenge() {
-            const currentDays = (state.challenges.days365 || 0) + 1;
-            if (currentDays > 365) {
-                showToast("ยินดีด้วย! คุณพิชิตความท้าทาย 365 วันครบถ้วนสมบูรณ์แล้ว!", "success");
-                return;
-            }
-
-            const targetSave = currentDays; // Day linear calculation
-            const newTx = {
-                id: 'tx-365-challenge-' + Date.now(),
-                type: 'deposit',
-                amount: targetSave,
-                goalId: "",
-                datetime: new Date().toISOString(),
-                note: `ภารกิจสัจจะ 365 วัน (วันที่ ${currentDays})`
-            };
-
-            state.transactions.push(newTx);
-            state.challenges.days365 = currentDays;
-            showToast("สำเร็จวันที่ " + currentDays + "! ยอดสะสมหยอดกระปุกเพิ่มขึ้น ฿" + targetSave, "success");
-            saveState();
-        }
-
+        // renderChallenges: handles all local state calculations for achievements and missions
         function renderChallenges() {
             const currentCount = state.challenges.monthlyCount || 0;
             DOM.setText('challengeMonthProgress', `${currentCount}/15 ครั้ง`);
@@ -1827,16 +1869,15 @@
             const nextAmount = (currentCount + 1) * 50 + 100;
             DOM.setText('nextSavingAmountText', `฿${nextAmount.toLocaleString()}`);
 
-            const d365 = state.challenges.days365 || 0;
-            DOM.setText('challenge365Progress', `${d365}/365 วัน`);
-            DOM.setStyle('challenge365Bar', 'width', `${(d365/365)*100}%`);
-
             // Evaluate locked/unlocked Achievements status
-            const totalSavingsSum = state.transactions.reduce((sum, tx) => sum + tx.amount, 0);
+            const normalSavings = state.transactions
+                .filter(tx => tx.type !== 'challenge_deposit')
+                .reduce((total, tx) => total + tx.amount, 0);
+            
             const hasSavings = state.transactions.length > 0;
             const hasGoalSlayer = state.goals.some(g => getGoalProgress(g) >= 100);
             const hasStreak3 = state.streak >= 3;
-            const has10k = totalSavingsSum >= 10000;
+            const has10k = normalSavings >= 10000;
 
             const listContainer = DOM.get('achievementList');
             if (listContainer) {
@@ -1863,7 +1904,7 @@
             }
         }
 
-        // ==================== TAB: SYSTEM CONFIGS & QUICK RELOADS ====================
+        // ==================== TAB: SYSTEM CONFIGS ====================
         function saveEmergencyFundSettings() {
             const expense = parseFloat(document.getElementById('emergencyExpenseInput')?.value || "15000");
             const months = parseInt(document.getElementById('emergencyMonthsSelect')?.value || "3");
@@ -1877,8 +1918,6 @@
             showToast("อัปเดตเกราะป้องกันความปลอดภัยกองทุนฉุกเฉินเรียบร้อย!");
             saveState();
         }
-
-        // ล้างฐานข้อมูลและถอดระบบการรีเซ็ตประวัติทางกายภาพที่ไม่จำเป็นออก
 
         async function triggerWipeAllDataConfirm() {
             const ok = await showConfirmModal("🚨 ยืนยันล้างระบบขั้นเด็ดขาด?", "คำเตือนสูงสุด! การดำเนินการนี้จะทำลายประวัติการเดินฝากเงินและเป้าหมายทั้งหมดในเครื่องนี้อย่างถาวร (ประวัติตกค้างในคลาวด์จะไม่ได้รับผลกระทบ)");
